@@ -10,5 +10,8 @@
   },
   "devDependencies": {
     "parcel": "2.7.0"
+  },
+  "dependencies": {
+    "rxjs": "7.5.6"
   }
 }
