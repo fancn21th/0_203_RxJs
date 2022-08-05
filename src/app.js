@@ -1,14 +1,16 @@
-const button = document.querySelector("button");
+/**
+ *  specify the dynamic behavior of a value completely at the time of its declaration
+ *  在声明时完全指定一个值的动态行为
+ *  行为编程
+ */
 const label = document.querySelector("label");
 
-import { fromEvent } from "rxjs";
+import { of, map } from "rxjs";
 
-fromEvent(button, "click").subscribe(() => {
-  label.innerHTML = "Clicked";
+const streamA = of(1, 2, 3);
+
+const streamB = streamA.pipe(map((x) => 10 * x));
+
+streamB.subscribe((x) => {
+  label.innerHTML += "," + x;
 });
-
-setInterval(() => {
-  const len = Math.floor(Math.random() * 3);
-  const arr = new Array(len).fill(".");
-  label.innerHTML = arr.join("");
-}, 1250);
