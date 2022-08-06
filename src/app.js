@@ -12,28 +12,14 @@
  *        push single & multiple values
  *
  */
-import { Observable } from "rxjs";
 
-const observable = new Observable((subscriber) => {
-  subscriber.next(1);
-  subscriber.next(2);
-  subscriber.next(3);
-  setTimeout(() => {
-    subscriber.next(4);
-    subscriber.complete();
+import { Observable } from "rxjs";
+import { printMessage } from "./utils";
+
+const observable = new Observable(function subscribe(subscriber) {
+  const id = setInterval(() => {
+    subscriber.next("hi");
   }, 1000);
 });
 
-console.log("just before subscribe");
-observable.subscribe({
-  next(x) {
-    console.log("got value " + x);
-  },
-  error(err) {
-    console.error("something wrong occurred: " + err);
-  },
-  complete() {
-    console.log("done");
-  },
-});
-console.log("just after subscribe");
+observable.subscribe((x) => printMessage(x));
