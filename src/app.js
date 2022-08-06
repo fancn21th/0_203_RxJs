@@ -13,7 +13,9 @@
  *
  */
 
-import { timer, interval } from "rxjs";
+import { of } from "rxjs";
 import { printMessage } from "./utils";
 
-interval(1000).subscribe(() => printMessage(new Date().getSeconds()));
+of(1, 10n, undefined, null, true, "foo", {}, () => {}).subscribe((val) =>
+  printMessage(val)
+);
