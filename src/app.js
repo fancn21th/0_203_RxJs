@@ -13,7 +13,7 @@
  *
  */
 
-import { timer } from "rxjs";
+import { timer, interval } from "rxjs";
 import { printMessage } from "./utils";
 
-timer(3000).subscribe(() => printMessage("Hello World!"));
+interval(1000).subscribe(() => printMessage(new Date().getSeconds()));
