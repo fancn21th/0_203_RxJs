@@ -13,17 +13,7 @@
  *
  */
 
-import { from } from "rxjs";
+import { timer } from "rxjs";
 import { printMessage } from "./utils";
 
-const promise = new Promise((resolve) => {
-  setTimeout(() => {
-    resolve("Promise resolved");
-  }, 1000);
-});
-
-const observable = from(promise);
-
-observable.subscribe((message) => {
-  printMessage(message);
-});
+timer(3000).subscribe(() => printMessage("Hello World!"));
