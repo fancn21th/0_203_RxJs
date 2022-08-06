@@ -13,13 +13,14 @@
  *
  */
 
-import { Observable } from "rxjs";
+import { fromEvent } from "rxjs";
 import { printMessage } from "./utils";
 
-const observable = new Observable(function subscribe(subscriber) {
-  const id = setInterval(() => {
-    subscriber.next("hi");
-  }, 1000);
-});
+const button = document.getElementsByTagName("button")[0];
 
-observable.subscribe((x) => printMessage(x));
+const clicksInDocument = fromEvent(button, "click", true);
+
+clicksInDocument.subscribe((evt) => {
+  printMessage(`I am clicked ${evt.target}`);
+  console.log(evt);
+});
