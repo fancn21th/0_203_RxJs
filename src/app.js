@@ -13,13 +13,15 @@
  *
  */
 
-import { fromEvent, switchMap, interval } from "rxjs";
+import { interval, timer, takeUntil } from "rxjs";
 import { printMessage } from "./utils";
 
-const button = document.getElementsByTagName("button")[0];
+const perOneSecond = interval(1000);
+const totalSeconds = timer(10000);
 
-let count = 0;
+// another way to unsubscribe
+const result = perOneSecond.pipe(takeUntil(totalSeconds));
 
-const clicks = fromEvent(button, "click");
-const result = clicks.pipe(switchMap(() => interval(1000)));
-result.subscribe(() => printMessage(count++));
+result.subscribe(() => {
+  printMessage(new Date().getSeconds());
+});
