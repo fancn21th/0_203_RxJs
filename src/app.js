@@ -13,15 +13,13 @@
  *
  */
 
-import { interval, timer, takeUntil } from "rxjs";
+import { of, zip, map } from "rxjs";
 import { printMessage } from "./utils";
 
-const perOneSecond = interval(1000);
-const totalSeconds = timer(10000);
+const age$ = of(27, 25, 29);
+const name$ = of("Foo", "Bar", "Beer");
+const isDev$ = of(true, true, false);
 
-// another way to unsubscribe
-const result = perOneSecond.pipe(takeUntil(totalSeconds));
-
-result.subscribe(() => {
-  printMessage(new Date().getSeconds());
-});
+zip(age$, name$, isDev$)
+  .pipe(map(([age, name, isDev]) => ({ age, name, isDev })))
+  .subscribe((x) => printMessage(x));
