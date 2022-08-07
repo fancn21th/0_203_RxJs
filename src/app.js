@@ -13,25 +13,12 @@
  *
  */
 
-import { interval } from "rxjs";
+import { of, filter, first } from "rxjs";
 import { printMessage } from "./utils";
-const btnStart = document.getElementById("btnStart");
-const btnStop = document.getElementById("btnStop");
 
-const observable = interval(1000 /* number of milliseconds */);
+const observable = of(-3, -2, 1, 2, 3, 4, 5).pipe(
+  filter((x) => x % 2 === 0),
+  first()
+);
 
-const handler = (value) => {
-  printMessage(new Date().getSeconds());
-};
-
-let subscription;
-
-subscription = observable.subscribe(handler);
-
-btnStart.addEventListener("click", function () {
-  subscription = observable.subscribe(handler);
-});
-
-btnStop.addEventListener("click", function () {
-  subscription.unsubscribe();
-});
+observable.subscribe((x) => printMessage(x));
