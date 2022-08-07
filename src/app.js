@@ -13,12 +13,12 @@
  *
  */
 
-import { of, filter, first } from "rxjs";
+import { fromEvent, throttle, interval } from "rxjs";
 import { printMessage } from "./utils";
 
-const observable = of(-3, -2, 1, 2, 3, 4, 5).pipe(
-  filter((x) => x % 2 === 0),
-  first()
-);
+const button = document.getElementsByTagName("button")[0];
 
-observable.subscribe((x) => printMessage(x));
+const clicks = fromEvent(button, "click");
+const result = clicks.pipe(throttle(() => interval(1000)));
+
+result.subscribe(() => printMessage("i am clicked"));
