@@ -13,12 +13,18 @@
  *
  */
 
-import { fromEvent, throttle, interval } from "rxjs";
+import { interval, scan, map, startWith } from "rxjs";
 import { printMessage } from "./utils";
 
-const button = document.getElementsByTagName("button")[0];
+const firstTwoFibs = [0, 1];
+// An endless stream of Fibonacci numbers.
+const fibonacci$ = interval(1000).pipe(
+  // Scan to get the fibonacci numbers (after 0, 1)
+  scan(([a, b]) => [b, a + b], firstTwoFibs),
+  // Get the second number in the tuple, it's the one you calculated
+  map(([, n]) => n),
+  // Start with our first two digits :)
+  startWith(...firstTwoFibs)
+);
 
-const clicks = fromEvent(button, "click");
-const result = clicks.pipe(throttle(() => interval(1000)));
-
-result.subscribe(() => printMessage("i am clicked"));
+fibonacci$.subscribe((x) => printMessage(x));
