@@ -13,18 +13,22 @@
  *
  */
 
-import { of, map, catchError } from "rxjs";
+import { interval, mergeMap, throwError, of, retry } from "rxjs";
 import { printMessage } from "./utils";
 
-of(1, 2, 3, 4, 5)
-  .pipe(
-    map((n) => {
-      if (n === 4) {
-        throw "four!";
-      }
-      return n;
-    }),
-    catchError((err) => of("I", "II", "III", "IV", "V"))
-  )
-  .subscribe((x) => printMessage(x));
-// 1, 2, 3, I, II, III, IV, V
+const source = interval(1000);
+const result = source.pipe(
+  mergeMap((val) => (val > 5 ? throwError(() => "Error!") : of(val))),
+  retry(2) // retry 2 times on error
+);
+
+result.subscribe({
+  next: (value) => printMessage(value),
+  error: (err) => printMessage(`${err}: Retried 2 times then quit!`),
+});
+
+// Output:
+// 0..1..2..3..4..5..
+// 0..1..2..3..4..5..
+// 0..1..2..3..4..5..
+// 'Error!: Retried 2 times then quit!'
