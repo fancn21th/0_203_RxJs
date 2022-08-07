@@ -13,13 +13,18 @@
  *
  */
 
-import { of, zip, map } from "rxjs";
+import { of, map, catchError } from "rxjs";
 import { printMessage } from "./utils";
 
-const age$ = of(27, 25, 29);
-const name$ = of("Foo", "Bar", "Beer");
-const isDev$ = of(true, true, false);
-
-zip(age$, name$, isDev$)
-  .pipe(map(([age, name, isDev]) => ({ age, name, isDev })))
+of(1, 2, 3, 4, 5)
+  .pipe(
+    map((n) => {
+      if (n === 4) {
+        throw "four!";
+      }
+      return n;
+    }),
+    catchError((err) => of("I", "II", "III", "IV", "V"))
+  )
   .subscribe((x) => printMessage(x));
+// 1, 2, 3, I, II, III, IV, V
