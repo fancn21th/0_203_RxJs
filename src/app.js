@@ -13,18 +13,26 @@
  *
  */
 
-import { Subject } from "rxjs";
+import { Observable, observeOn, asyncScheduler } from "rxjs";
 import { printMessage } from "./utils";
 
-const subject = new Subject();
+const observable = new Observable((observer) => {
+  observer.next(1);
+  observer.next(2);
+  observer.next(3);
+  observer.complete();
+}).pipe(observeOn(asyncScheduler));
 
-// it may be called hot or cold before v6
-subject.subscribe({
-  next: (v) => printMessage(`observerA: ${v}`),
+printMessage("just before subscribe");
+observable.subscribe({
+  next(x) {
+    printMessage("got value " + x);
+  },
+  error(err) {
+    console.error("something wrong occurred: " + err);
+  },
+  complete() {
+    printMessage("done");
+  },
 });
-subject.subscribe({
-  next: (v) => printMessage(`observerB: ${v}`),
-});
-
-subject.next(1);
-subject.next(2);
+printMessage("just after subscribe");
