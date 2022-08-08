@@ -18,7 +18,8 @@ import { printMessage } from "./utils";
 
 const subject = new Subject();
 
-// it may be called hot or cold before v6
+// it may be called hot before v6
+// you can refer to https://www.youtube.com/watch?v=ewcoEYS85Co
 subject.subscribe({
   next: (v) => printMessage(`observerA: ${v}`),
 });
