@@ -13,22 +13,18 @@
  *
  */
 
-import { interval, mergeMap, throwError, of, retry } from "rxjs";
+import { Subject } from "rxjs";
 import { printMessage } from "./utils";
 
-const source = interval(1000);
-const result = source.pipe(
-  mergeMap((val) => (val > 5 ? throwError(() => "Error!") : of(val))),
-  retry(2) // retry 2 times on error
-);
+const subject = new Subject();
 
-result.subscribe({
-  next: (value) => printMessage(value),
-  error: (err) => printMessage(`${err}: Retried 2 times then quit!`),
+// it may be called hot or cold before v6
+subject.subscribe({
+  next: (v) => printMessage(`observerA: ${v}`),
+});
+subject.subscribe({
+  next: (v) => printMessage(`observerB: ${v}`),
 });
 
-// Output:
-// 0..1..2..3..4..5..
-// 0..1..2..3..4..5..
-// 0..1..2..3..4..5..
-// 'Error!: Retried 2 times then quit!'
+subject.next(1);
+subject.next(2);
